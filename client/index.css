@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background-image: url(./img/fondo.png);
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.root {
+  flex: 1; /* Permite que el contenido ocupe el espacio disponible */
+}
+
+.contenedor-img {
+  display: flex;
+  justify-content: space-around;
+}
+
+.mi-img {
+  transition: transform 0.3s;
+  opacity: 0.3s;
+}
+
+.mi-img:hover {
+  transform: scale(1.5);
+  opacity: 0.8;
+}

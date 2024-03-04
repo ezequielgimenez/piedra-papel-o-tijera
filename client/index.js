@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const text_1 = require("./components/text");
+const boton_1 = require("./components/boton");
+const piedra_papel_tijera_1 = require("./components/piedra-papel-tijera");
+const input_1 = require("./components/input");
+require("./router");
+require("./pages/inicio/index");
+require("./pages/registro/index");
+require("./pages/login/index");
+require("./pages/opciones/index");
+require("./pages/intrucciones/index");
+require("./pages/ingresarCodigo/index");
+require("./pages/share/index");
+require("./pages/waitingRoom/index");
+require("./pages/playing/index");
+require("./pages/loser/index");
+require("./pages/win/index");
+require("./pages/empate/index");
+(function () {
+    (0, text_1.initTextComponent)();
+    (0, boton_1.buttonComponent)();
+    (0, piedra_papel_tijera_1.initComponentPPT)();
+    (0, input_1.inputComponent)();
+})();
