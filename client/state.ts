@@ -1,6 +1,6 @@
 import { rtdb } from "./rtdb";
 
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "https://piedra-papel-o-tijera-7ks0.onrender.com";
 
 const state = {
   data: {
