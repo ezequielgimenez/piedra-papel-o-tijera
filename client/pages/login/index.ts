@@ -25,6 +25,11 @@ export class Login extends HTMLElement {
          <div class="contenedor-error">
             <h2>Por favor no dejes campos sin completar</h2>
          </div>
+
+         <div class="contenedor-login">
+         <h2>Email no registrado, por favor primero registrate</h2>
+
+      </div>
          <ppt-component></ppt-component>
     </form>
 
@@ -33,6 +38,11 @@ export class Login extends HTMLElement {
                 display:none;
                 color:red;
              }
+
+             .contenedor-login{
+              display:none;
+              color:red;
+           }
              .contenedor-input{
               display:flex;
               justify-content:center;
@@ -50,7 +60,12 @@ export class Login extends HTMLElement {
         `;
 
     const formEvent = this.querySelector(".form") as HTMLFormElement;
+
     const divError = this.querySelector(".contenedor-error") as HTMLDivElement;
+    const divErrorLogin = this.querySelector(
+      ".contenedor-login"
+    ) as HTMLDivElement;
+
     const miButtonEvent = this.querySelector(".mi-button");
 
     miButtonEvent.addEventListener("MiButtonClick", (e) => {
@@ -63,8 +78,16 @@ export class Login extends HTMLElement {
       } else {
         divError.remove();
         state.setEmailAndFullName(email, name);
-        state.signIn();
-        Router.go("/opciones");
+        state.signIn(() => {
+          const currentState = state.getState();
+          if (currentState.messageError === "" || undefined) {
+            Router.go("/opciones");
+          } else {
+            divErrorLogin.style.display = "flex";
+            divErrorLogin.style.justifyContent = "center";
+            divErrorLogin.style.alignItems = "center";
+          }
+        });
       }
     });
   }

@@ -7,6 +7,7 @@ const state = {
     rtdbData: {},
     email: "",
     userId: "",
+    messageError: "",
     idSala: "",
     rtdbID: "",
     resultado: "",
@@ -60,7 +61,7 @@ const state = {
     }
   },
 
-  signIn() {
+  signIn(callback) {
     const currentState = this.getState();
     if (currentState.email) {
       fetch(API_BASE_URL + "/signin", {
@@ -76,8 +77,19 @@ const state = {
           return resp.json();
         })
         .then((data) => {
-          currentState.userId = data.idDelUser;
-          this.setState(currentState);
+          if (callback) {
+            if (data.message === undefined || "") {
+              currentState.userId = data.idDelUser;
+              console.log("Data del signIn", data);
+
+              this.setState(currentState);
+            } else {
+              console.log("Data message", data.message);
+              currentState.messageError = data.message;
+              this.setState(currentState);
+            }
+            callback();
+          }
         });
     } else {
       console.log("No hay un email en el state");
@@ -122,17 +134,22 @@ const state = {
       })
       .then((data) => {
         if (callback) {
-          console.log("rtdb id:", data.rtdbID);
-          currenState.rtdbID = data.rtdbID; /// Res rtbdID
-          currenState.nombreOwner = data.nombreOwner; /// Res nombreOwner
-          currenState.nombre2 = data.nombre;
+          if (data.message === undefined || "") {
+            currenState.rtdbID = data.rtdbID; /// Res rtbdID
+            currenState.nombreOwner = data.nombreOwner; /// Res nombreOwner
+            currenState.nombre2 = data.nombre;
 
-          //Mi state toma el valor que le sumamos al player ganador(valor actualizado)
-          //o toma el valor inicial  que le dimos en "index playing" si no tiene aun datos y gano por primera vez osea "1"
-          currenState.player1 = data.resultados.player1;
-          currenState.player2 = data.resultados.player2;
-
-          this.setState(currenState);
+            //Mi state toma el valor que le sumamos al player ganador(valor actualizado)
+            //o toma el valor inicial  que le dimos en "index playing" si no tiene aun datos y gano por primera vez osea "1"
+            currenState.player1 = data.resultados.player1;
+            currenState.player2 = data.resultados.player2;
+            console.log("Data sala", data);
+            this.setState(currenState);
+          } else {
+            currenState.messageError = data.message;
+            console.log("Data error Sala message", data.message);
+            this.setState(currenState);
+          }
           callback();
         }
       });

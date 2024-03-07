@@ -145,14 +145,20 @@ app.get("/salas/:idSala", (req, res) => {
             .doc(idSala)
             .get()
             .then((snap) => {
-              const salaData = snap.data();
-              const userData = doc.data();
-              salaData.nombre = userData.nombre;
-              res.json(salaData);
+              if (snap.exists) {
+                const salaData = snap.data();
+                const userData = doc.data();
+                salaData.nombre = userData.nombre;
+                res.json(salaData);
+              } else {
+                res.status(401).json({
+                  message: "No existe la sala",
+                });
+              }
             });
         } else {
           res.status(401).json({
-            message: "No existe",
+            message: "No existe el doc del user",
           });
         }
       });

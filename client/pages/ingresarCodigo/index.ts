@@ -13,6 +13,9 @@ export class Codigo extends HTMLElement {
                <input class="my-input" type="text" name="idSala">
             </div>
          <mi-button class="button" atributoBoton="Ingresar a la sala"></mi-button>
+         <div class="sala-error">
+            <h2> Error no se encontro la sala, verifica el numero y que sea una sala creada</h2>
+          </div>
     </form>
          <ppt-component></ppt-component>
 
@@ -23,7 +26,10 @@ export class Codigo extends HTMLElement {
           justify-content:center;
           align-items:center;
         }
-
+        .sala-error{
+          display:none;
+          color:red;
+        }
          .my-input{
           width:319px;
           height:84px;
@@ -36,6 +42,7 @@ export class Codigo extends HTMLElement {
 
     const eventButton = this.querySelector(".button");
     const formEvent = this.querySelector(".form") as HTMLFormElement;
+    const salaNotFount = this.querySelector(".sala-error") as HTMLDivElement;
 
     eventButton?.addEventListener("MiButtonClick", (e) => {
       e.preventDefault();
@@ -45,11 +52,16 @@ export class Codigo extends HTMLElement {
       state.setState(currentState);
 
       state.getRoom(() => {
-        state.pushJugada();
-        Router.go("/instrucciones");
+        const currentState = state.getState();
+        if (currentState.messageError === "" || undefined) {
+          state.pushJugada(); //Pushea en la base de datos, la data del jugador name,user y lo dirige a la sala de espera (instrucciones)
+          Router.go("/instrucciones");
+        } else {
+          salaNotFount.style.display = "flex";
+          salaNotFount.style.justifyContent = "center";
+          salaNotFount.style.alignItems = "center";
+        }
       });
-      const nuevoState = state.getState();
-      console.log("rtdbRoomId", nuevoState.rtdbID);
     });
   }
 }
