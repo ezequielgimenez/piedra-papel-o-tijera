@@ -26,7 +26,7 @@ const state = {
 
   getState() {
     return this.data;
-    //Te devuelve la ultima version del estado
+    ///Te devuelve la ultima version del estado
   },
 
   setEmailAndFullName(email: string, nombre: string) {

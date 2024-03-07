@@ -16,6 +16,9 @@ class Codigo extends HTMLElement {
                <input class="my-input" type="text" name="idSala">
             </div>
          <mi-button class="button" atributoBoton="Ingresar a la sala"></mi-button>
+         <div class="sala-error">
+            <h2> Error no se encontro la sala, verifica el numero y que sea una sala creada</h2>
+          </div>
     </form>
          <ppt-component></ppt-component>
 
@@ -26,7 +29,10 @@ class Codigo extends HTMLElement {
           justify-content:center;
           align-items:center;
         }
-
+        .sala-error{
+          display:none;
+          color:red;
+        }
          .my-input{
           width:319px;
           height:84px;
@@ -38,6 +44,7 @@ class Codigo extends HTMLElement {
         `;
         const eventButton = this.querySelector(".button");
         const formEvent = this.querySelector(".form");
+        const salaNotFount = this.querySelector(".sala-error");
         eventButton?.addEventListener("MiButtonClick", (e) => {
             e.preventDefault();
             const valorInput = formEvent.idSala.value;
@@ -45,11 +52,17 @@ class Codigo extends HTMLElement {
             currentState.idSala = valorInput;
             state_1.state.setState(currentState);
             state_1.state.getRoom(() => {
-                state_1.state.pushJugada();
-                router_1.Router.go("/instrucciones");
+                const currentState = state_1.state.getState();
+                if (currentState.messageError === "" || undefined) {
+                    state_1.state.pushJugada(); //Pushea en la base de datos, la data del jugador name,user y lo dirige a la sala de espera (instrucciones)
+                    router_1.Router.go("/instrucciones");
+                }
+                else {
+                    salaNotFount.style.display = "flex";
+                    salaNotFount.style.justifyContent = "center";
+                    salaNotFount.style.alignItems = "center";
+                }
             });
-            const nuevoState = state_1.state.getState();
-            console.log("rtdbRoomId", nuevoState.rtdbID);
         });
     }
 }
