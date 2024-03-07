@@ -62,8 +62,9 @@ export class Registro extends HTMLElement {
         console.log("name", name);
         console.log("email", email);
         state.setEmailAndFullName(email, name);
-        state.signUp();
-        Router.go("/opciones");
+        state.signUp(() => {
+          Router.go("/opciones");
+        });
       }
     });
   }

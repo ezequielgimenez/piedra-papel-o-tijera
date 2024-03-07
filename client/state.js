@@ -7,6 +7,7 @@ const state = {
     data: {
         rtdbData: {},
         email: "",
+        name: "",
         userId: "",
         messageError: "",
         idSala: "",
@@ -15,7 +16,6 @@ const state = {
         score: "",
         player1: 0,
         player2: 0,
-        name: "",
         nombreOwner: "",
         nombre2: "",
         choice: "",
@@ -33,7 +33,7 @@ const state = {
         currentState.name = nombre;
         this.setState(currentState);
     },
-    signUp() {
+    signUp(callback) {
         const currenState = this.getState();
         if (currenState.email) {
             fetch(API_BASE_URL + "/signup", {
@@ -43,15 +43,18 @@ const state = {
                 },
                 body: JSON.stringify({
                     email: currenState.email,
-                    nombre: currenState.nombre,
+                    nombre: currenState.name,
                 }),
             })
                 .then((resp) => {
                 return resp.json();
             })
                 .then((data) => {
-                currenState.userId = data.id;
-                this.setState(currenState);
+                if (callback) {
+                    currenState.userId = data.id;
+                    this.setState(currenState);
+                    callback();
+                }
             });
         }
         else {
