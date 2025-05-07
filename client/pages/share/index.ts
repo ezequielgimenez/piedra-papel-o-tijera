@@ -9,9 +9,13 @@ export class Shareroom extends HTMLElement {
     const currentState = state.getState();
     this.innerHTML = `
             <div class="contenedor-datos">
-                <div class="dato">Nombre 1:${currentState.name}</div>
+                <div class="dato">Nombre 1:${currentState.nombreOwner}</div>
                 <div class="dato">Sala:${currentState.idSala}</div>
-                <div class="dato">Nombre 2:${currentState.name}</div>
+                <div class="dato">Nombre 2:${
+                  currentState.name !== currentState.nombreOwner
+                    ? currentState.name
+                    : ""
+                }</div>
             </div>
 
             <div class="contenedor-titulo">
@@ -19,7 +23,9 @@ export class Shareroom extends HTMLElement {
             </div>
 
             <div class="contenedor-codigo">
-              <el-texto class="texto" tipoTexto="body">${currentState.idSala}</el-texto>
+              <el-texto class="texto" tipoTexto="body">${
+                currentState.idSala
+              }</el-texto>
             </div>
 
             <div class="contenedor-titulo segundo">

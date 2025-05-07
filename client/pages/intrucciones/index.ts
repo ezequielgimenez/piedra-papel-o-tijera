@@ -32,8 +32,8 @@ export class Instrucciones extends HTMLElement {
             <div class="dato">Nombre 1:${currentState.nombreOwner}</div>
             <div class="dato">Sala:${currentState.idSala}</div>
             <div class="dato">Nombre 2:${
-              currentState.nombre2 !== currentState.nombreOwner
-                ? currentState.nombre2
+              currentState.name !== currentState.nombreOwner
+                ? currentState.name
                 : ""
             }</div>
         </div>
