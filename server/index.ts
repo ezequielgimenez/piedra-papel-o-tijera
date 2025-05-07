@@ -102,8 +102,9 @@ app.post("/rooms", (req, res) => {
           .then(() => {
             //creo un doc con un id corto en firestore y guardo ahi el id largo
             const idCorto = 1000 + Math.floor(Math.random() * 999);
-            salaCollection
-              .doc(idCorto.toString())
+            const salaDoc = salaCollection.doc(idCorto.toString());
+
+            salaDoc
               .set({
                 rtdbID: idLargo,
                 nombreOwner: userData.nombre,
@@ -113,10 +114,14 @@ app.post("/rooms", (req, res) => {
                 },
               })
               .then(() => {
+                return salaDoc.get();
+              })
+              .then((doc) => {
+                const salaData = doc.data();
                 res.json({
                   success: true,
                   id: idCorto,
-                  nombreOwner: userData.nombre,
+                  salaData,
                 });
               });
           });
