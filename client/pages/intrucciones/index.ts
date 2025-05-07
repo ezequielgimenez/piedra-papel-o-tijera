@@ -81,6 +81,8 @@ export class Instrucciones extends HTMLElement {
         const currentState = state.getState();
         const data = currentState.rtdbData;
         const datacompleta = map(data);
+        console.log("const data = currentState.rtdbData", data);
+        console.log("const datacompleta = map(data)", datacompleta);
 
         if (datacompleta[0].start === true && datacompleta[1].start === true) {
           divEsperando.remove();
