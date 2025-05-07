@@ -131,7 +131,7 @@ const state = {
   getRoom(callback?) {
     const currenState = this.getState();
     const idRoom = currenState.idSala;
-    fetch(API_BASE_URL + "/salas/" + idRoom + "?userId=" + currenState.userId)
+    fetch(API_BASE_URL + "/rooms/" + idRoom + "?userId=" + currenState.userId)
       .then((resp) => {
         return resp.json();
       })
