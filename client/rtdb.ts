@@ -5,9 +5,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const app = firebase.initializeApp({
-  apiKey: process.env.apiKey,
+  apiKey: process.env.API_KEY,
   authDomain: "prueba-apx.firebaseapp.com",
-  databaseURL: process.env.dataBaseURL,
+  databaseURL: process.env.DATABASE_URl,
   projectId: "prueba-apx",
 });
 
