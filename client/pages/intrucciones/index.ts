@@ -8,22 +8,9 @@ export class Instrucciones extends HTMLElement {
     this.playerEntry();
   }
   playerEntry() {
-    state.traerDataArrays(() => {
-      const currentState = state.getState();
-      const data = currentState.rtdbData;
-
-      const datacompleta = map(data);
-      if (currentState.nombreOwner !== datacompleta[1].name) {
-        currentState.nombre2 = datacompleta[1].name;
-        currentState.nombre2 =
-          currentState.nombre2 !== undefined ? currentState.nombre2 : "";
-      } else {
-        currentState.nombre2 = datacompleta[0].name;
-      }
-
-      this.render();
-    });
+    state.traerDataArrays();
   }
+
   render() {
     const currentState = state.getState();
 
@@ -77,19 +64,18 @@ export class Instrucciones extends HTMLElement {
       state.setState(currentState);
       state.pushJugada();
 
-      state.traerDataArrays(() => {
-        const currentState = state.getState();
-        const data = currentState.rtdbData;
-        const datacompleta = map(data);
-        console.log("const data = currentState.rtdbData", data);
-        console.log("const datacompleta = map(data)", datacompleta);
-        console.log("currenState", currentState);
+      state.traerDataArrays();
 
-        if (datacompleta[0].start === true && datacompleta[1].start === true) {
-          divEsperando.remove();
-          Router.go("/playing");
-        }
-      });
+      const data = currentState.rtdbData;
+      const datacompleta = map(data);
+      console.log("const data = currentState.rtdbData", data);
+      console.log("const datacompleta = map(data)", datacompleta);
+      console.log("currn", currentState);
+
+      if (datacompleta[0].start === true && datacompleta[1].start === true) {
+        divEsperando.remove();
+        Router.go("/playing");
+      }
     });
   }
 }
