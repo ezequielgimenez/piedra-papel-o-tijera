@@ -83,6 +83,7 @@ export class Instrucciones extends HTMLElement {
         const datacompleta = map(data);
         console.log("const data = currentState.rtdbData", data);
         console.log("const datacompleta = map(data)", datacompleta);
+        console.log("currenState", currentState);
 
         if (datacompleta[0].start === true && datacompleta[1].start === true) {
           divEsperando.remove();
