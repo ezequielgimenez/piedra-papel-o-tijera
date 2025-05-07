@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import "firebase/auth";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -11,5 +12,15 @@ const app = firebase.initializeApp({
 });
 
 const rtdb = firebase.database();
+
+firebase
+  .auth()
+  .signInAnonymously()
+  .then(() => {
+    console.log("Sesión anónima iniciada");
+  })
+  .catch((error) => {
+    console.error("Error al iniciar sesión anónima", error);
+  });
 
 export { rtdb };
