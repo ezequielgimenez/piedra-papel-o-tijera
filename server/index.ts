@@ -115,6 +115,7 @@ app.post("/rooms", (req, res) => {
               })
               .then(() => {
                 res.json({
+                  nombreOwner: userData.nombre,
                   success: true,
                   id: idCorto,
                 });

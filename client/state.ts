@@ -143,8 +143,8 @@ const state = {
 
             //Mi state toma el valor que le sumamos al player ganador(valor actualizado)
             //o toma el valor inicial  que le dimos en "index playing" si no tiene aun datos y gano por primera vez osea "1"
-            currenState.player1 = data.resultados.player1;
-            currenState.player2 = data.resultados.player2;
+            currenState.player1 = data.salaData.resultados.player1;
+            currenState.player2 = data.salaData.resultados.player2;
             this.setState(currenState);
             callback();
           }
