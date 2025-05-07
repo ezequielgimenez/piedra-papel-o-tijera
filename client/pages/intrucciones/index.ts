@@ -1,13 +1,29 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
-import { rtdb } from "../../rtdb";
 import map from "lodash/map";
 
 export class Instrucciones extends HTMLElement {
   connectedCallback() {
     this.render();
+    this.playerEntry();
   }
+  playerEntry() {
+    state.traerDataArrays(() => {
+      const currentState = state.getState();
+      const data = currentState.rtdbData;
 
+      const datacompleta = map(data);
+      if (currentState.nombreOwner !== datacompleta[1].name) {
+        currentState.nombre2 = datacompleta[1].name;
+        currentState.nombre2 =
+          currentState.nombre2 !== undefined ? currentState.nombre2 : "";
+      } else {
+        currentState.nombre2 = datacompleta[0].name;
+      }
+
+      this.render();
+    });
+  }
   render() {
     const currentState = state.getState();
 
@@ -16,8 +32,8 @@ export class Instrucciones extends HTMLElement {
             <div class="dato">Nombre 1:${currentState.nombreOwner}</div>
             <div class="dato">Sala:${currentState.idSala}</div>
             <div class="dato">Nombre 2:${
-              currentState.name !== currentState.nombreOwner
-                ? currentState.name
+              currentState.nombre2 !== currentState.nombreOwner
+                ? currentState.nombre2
                 : ""
             }</div>
         </div>
@@ -61,23 +77,12 @@ export class Instrucciones extends HTMLElement {
       state.setState(currentState);
       state.pushJugada();
 
-      const salaRef = rtdb.ref("salas/" + currentState.rtdbID + "/currentGame");
-      let yaRedirigio = false;
+      state.traerDataArrays(() => {
+        const currentState = state.getState();
+        const data = currentState.rtdbData;
+        const datacompleta = map(data);
 
-      salaRef.on("value", (snapshot) => {
-        const value = snapshot.val();
-        currentState.rtdbData = value;
-        state.setState(currentState);
-        const datacompleta = map(value);
-        console.log("dataCompleta", datacompleta);
-        console.log("currenState", currentState);
-
-        if (
-          datacompleta[0]?.start === true &&
-          datacompleta[1]?.start === true &&
-          !yaRedirigio
-        ) {
-          yaRedirigio = true;
+        if (datacompleta[0].start === true && datacompleta[1].start === true) {
           divEsperando.remove();
           Router.go("/playing");
         }

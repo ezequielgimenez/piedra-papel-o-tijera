@@ -208,13 +208,18 @@ const state = {
     );
   },
 
-  traerDataArrays(callback?: () => void) {
+  traerDataArrays(callback) {
     const currenState = this.getState();
+
+    // Connection with RTDB
     const salaRef = rtdb.ref("salas/" + currenState.rtdbID + "/currentGame");
     salaRef.on("value", (snapshot) => {
-      const value = snapshot.val();
-      this.setState({ ...currenState, rtdbData: value });
-      if (callback) callback();
+      if (callback) {
+        const value = snapshot.val();
+        currenState.rtdbData = value;
+        this.setState(currenState);
+        callback();
+      }
     });
   },
 
