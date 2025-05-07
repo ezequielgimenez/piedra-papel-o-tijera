@@ -8,7 +8,17 @@ export class Instrucciones extends HTMLElement {
     this.playerEntry();
   }
   playerEntry() {
-    state.traerDataArrays();
+    state.traerDataArrays(() => {
+      const currentState = state.getState();
+      const data = currentState.rtdbData;
+      const datacompleta = map(data);
+      console.log("data = currentState.rtdbData", data);
+      console.log("dataCompleta = map(data)", datacompleta);
+
+      if (datacompleta[0].start === true && datacompleta[1].start === true) {
+        Router.go("/playing");
+      }
+    });
   }
 
   render() {
