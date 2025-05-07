@@ -85,7 +85,7 @@ app.post("/signin", (req, res) => {
 
 // OnlyGenerateSala
 app.post("/rooms", (req, res) => {
-  //Nos pedira el userId que en teoria estara registrado en la base de datos para ingresar a la sala
+  //Nos pedira el userId que en teoria estara registrado en la base de datos para ingresar a la salaChat
   const userId = req.body.userId;
   userCollection
     .doc(userId)
