@@ -62,12 +62,22 @@ export class Instrucciones extends HTMLElement {
       state.pushJugada();
 
       const salaRef = rtdb.ref("salas/" + currentState.rtdbID + "/currentGame");
+      let yaRedirigio = false;
+
       salaRef.on("value", (snapshot) => {
         const value = snapshot.val();
         currentState.rtdbData = value;
         state.setState(currentState);
         const datacompleta = map(value);
-        if (datacompleta[0].start === true && datacompleta[1].start === true) {
+        console.log("dataCompleta", datacompleta);
+        console.log("currenState", currentState);
+
+        if (
+          datacompleta[0]?.start === true &&
+          datacompleta[1]?.start === true &&
+          !yaRedirigio
+        ) {
+          yaRedirigio = true;
           divEsperando.remove();
           Router.go("/playing");
         }
