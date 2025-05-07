@@ -1,24 +1,11 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
+import { rtdb } from "../../rtdb";
 import map from "lodash/map";
 
 export class Instrucciones extends HTMLElement {
   connectedCallback() {
     this.render();
-    this.playerEntry();
-  }
-  playerEntry() {
-    state.traerDataArrays(() => {
-      const currentState = state.getState();
-      const data = currentState.rtdbData;
-      const datacompleta = map(data);
-      console.log("data = currentState.rtdbData", data);
-      console.log("dataCompleta = map(data)", datacompleta);
-
-      if (datacompleta[0].start === true && datacompleta[1].start === true) {
-        Router.go("/playing");
-      }
-    });
   }
 
   render() {
@@ -74,13 +61,12 @@ export class Instrucciones extends HTMLElement {
       state.setState(currentState);
       state.pushJugada();
 
-      state.traerDataArrays(() => {
-        const currentState = state.getState();
-        const data = currentState.rtdbData;
-        const datacompleta = map(data);
-        console.log("data = currentState.rtdbData", data);
-        console.log("dataCompleta = map(data)", datacompleta);
-
+      const salaRef = rtdb.ref("salas/" + currentState.rtdbID + "/currentGame");
+      salaRef.on("value", (snapshot) => {
+        const value = snapshot.val();
+        currentState.rtdbData = value;
+        state.setState(currentState);
+        const datacompleta = map(value);
         if (datacompleta[0].start === true && datacompleta[1].start === true) {
           divEsperando.remove();
           Router.go("/playing");

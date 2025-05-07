@@ -211,7 +211,6 @@ const state = {
   traerDataArrays(callback?: () => void) {
     const currenState = this.getState();
     const salaRef = rtdb.ref("salas/" + currenState.rtdbID + "/currentGame");
-    salaRef.off();
     salaRef.on("value", (snapshot) => {
       const value = snapshot.val();
       this.setState({ ...currenState, rtdbData: value });
