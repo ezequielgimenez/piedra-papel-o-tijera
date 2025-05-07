@@ -64,18 +64,18 @@ export class Instrucciones extends HTMLElement {
       state.setState(currentState);
       state.pushJugada();
 
-      state.traerDataArrays();
+      state.traerDataArrays(() => {
+        const currentState = state.getState();
+        const data = currentState.rtdbData;
+        const datacompleta = map(data);
+        console.log("data = currentState.rtdbData", data);
+        console.log("dataCompleta = map(data)", datacompleta);
 
-      const data = currentState.rtdbData;
-      const datacompleta = map(data);
-      console.log("const data = currentState.rtdbData", data);
-      console.log("const datacompleta = map(data)", datacompleta);
-      console.log("currn", currentState);
-
-      if (datacompleta[0].start === true && datacompleta[1].start === true) {
-        divEsperando.remove();
-        Router.go("/playing");
-      }
+        if (datacompleta[0].start === true && datacompleta[1].start === true) {
+          divEsperando.remove();
+          Router.go("/playing");
+        }
+      });
     });
   }
 }
