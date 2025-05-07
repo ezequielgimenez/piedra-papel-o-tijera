@@ -195,7 +195,14 @@ app.post("/playing", (req, res) => {
         .then(() => {
           res.json({
             success: true,
-            message: "Operacion realizada",
+            message: "Operacion realizada con exito",
+          });
+        })
+        .catch((error) => {
+          console.error("Error en /playing:", error);
+          res.status(500).json({
+            success: false,
+            message: "Error en la operación",
           });
         });
     });
