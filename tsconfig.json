@@ -1,11 +1,11 @@
 {
-    "compilerOptions": {
-      "module": "commonJS",
-      "target": "ESNext",
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "strictNullChecks": false,
-    },
-    "files": ["./server/index.ts"],
-    "include": ["client/**/*", "server/**/*"]
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "strictNullChecks": false
+  },
+  "files": ["./server/index.ts"],
+  "include": ["server/**/*"]
 }

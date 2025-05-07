@@ -19,7 +19,7 @@ export class Registro extends HTMLElement {
              <input class="my-input" type="text" name="email">
          </div>
 
-         <mi-button type="submit" class="mi-button" atributoBoton="Registrarse"></mi-button>
+         <mi-button class="mi-button" atributoBoton="Registrarse"></mi-button>
          <div class="error">
           <h2>Por favor introduzca email y nombre<h2>
          </div>
@@ -31,6 +31,11 @@ export class Registro extends HTMLElement {
          .error{
           display:none;
           color:red;
+          text-align:center;
+          font-family: 'Segoe UI', sans-serif;
+          margin:5px 0;
+
+
          }
          .contenedor-input{
           display:flex;
@@ -51,16 +56,16 @@ export class Registro extends HTMLElement {
     const myButton = this.querySelector(".mi-button");
     const divError = this.querySelector(".error") as HTMLDivElement;
 
-    myButton.addEventListener("MiButtonClick", (e) => {
+    myButton?.addEventListener("click", (e) => {
       e.preventDefault();
       const email = formEvent.email.value;
       const name = formEvent.nombre.value;
       if (name.trim() === "" && email.trim() === "") {
         divError.style.display = "block";
+        alert("Por favor no dejes campos sin completar");
       } else {
         divError.remove();
-        console.log("name", name);
-        console.log("email", email);
+
         state.setEmailAndFullName(email, name);
         state.signUp(() => {
           Router.go("/opciones");

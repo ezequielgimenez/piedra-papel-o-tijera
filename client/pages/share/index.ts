@@ -11,7 +11,7 @@ export class Shareroom extends HTMLElement {
             <div class="contenedor-datos">
                 <div class="dato">Nombre 1:${currentState.name}</div>
                 <div class="dato">Sala:${currentState.idSala}</div>
-                <div class="dato">Nombre 2:${currentState.nombre2}</div>
+                <div class="dato">Nombre 2:${currentState.name}</div>
             </div>
 
             <div class="contenedor-titulo">

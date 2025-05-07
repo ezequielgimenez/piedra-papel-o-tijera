@@ -154,7 +154,6 @@ export class Playing extends HTMLElement {
 
   showImagePlayer2() {
     const currentState = state.getState();
-    const valores = []; //tijera,piedra,papel
     const imgAll = this.querySelectorAll(".img-random");
     const contenedorImg2 = this.querySelector(".contenedor-img2");
 

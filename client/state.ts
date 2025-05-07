@@ -54,13 +54,15 @@ const state = {
         })
         .then((data) => {
           if (callback) {
-            currenState.userId = data.id;
-            this.setState(currenState);
-            callback();
+            if (data.success) {
+              currenState.userId = data.id;
+              this.setState(currenState);
+              callback();
+            }
           }
         });
     } else {
-      console.log("No hay un email en el state");
+      alert("No estas logueado o registrado");
     }
   },
 
@@ -81,13 +83,10 @@ const state = {
         })
         .then((data) => {
           if (callback) {
-            if (data.message === undefined || "") {
-              currentState.userId = data.idDelUser;
-              console.log("Data del signIn", data);
-
+            if (data.success) {
+              currentState.userId = data.id;
               this.setState(currentState);
             } else {
-              console.log("Data message", data.message);
               currentState.messageError = data.message;
               this.setState(currentState);
             }
@@ -95,14 +94,14 @@ const state = {
           }
         });
     } else {
-      console.log("No hay un email en el state");
+      alert("No estas logueado o registrado");
     }
   },
 
   generateNewRoom(callback?) {
     const currentState = this.getState();
     if (currentState.userId) {
-      fetch(API_BASE_URL + "/generarSala", {
+      fetch(API_BASE_URL + "/rooms", {
         method: "post",
         headers: {
           "content-type": "application/json",
@@ -115,16 +114,17 @@ const state = {
           return resp.json();
         })
         .then((data) => {
-          if (callback) {
-            currentState.idSala = data.idSala;
-            currentState.nombreOwner = data.nombreOwner;
-            // currentState.score = data.resultados;
-            this.setState(currentState);
-            callback();
+          if (data.success) {
+            if (callback) {
+              currentState.idSala = data.id;
+              currentState.nombreOwner = data.nombreOwner;
+              this.setState(currentState);
+              callback();
+            }
           }
         });
     } else {
-      console.log("No hay userId");
+      alert("No estas logueado o registrado");
     }
   },
 
@@ -136,26 +136,43 @@ const state = {
         return resp.json();
       })
       .then((data) => {
-        if (callback) {
-          if (data.message === undefined || "") {
-            currenState.rtdbID = data.rtdbID; /// Res rtbdID
-            currenState.nombreOwner = data.nombreOwner; /// Res nombreOwner
-            currenState.nombre2 = data.nombre;
+        if (data.success) {
+          if (callback) {
+            currenState.rtdbID = data.id;
+            currenState.nombreOwner = data.nombreOwner;
 
             //Mi state toma el valor que le sumamos al player ganador(valor actualizado)
             //o toma el valor inicial  que le dimos en "index playing" si no tiene aun datos y gano por primera vez osea "1"
             currenState.player1 = data.resultados.player1;
             currenState.player2 = data.resultados.player2;
-            console.log("Data sala", data);
             this.setState(currenState);
-          } else {
-            currenState.messageError = data.message;
-            console.log("Data error Sala message", data.message);
-            this.setState(currenState);
+            callback();
           }
-          callback();
+        } else {
+          currenState.messageError = data.message;
+          this.setState(currenState);
         }
       });
+  },
+
+  pushJugada() {
+    const currentState = this.getState();
+    const nameDelState = currentState.name;
+    fetch(API_BASE_URL + "/playing", {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: currentState.userId,
+        idRealTime: currentState.rtdbID,
+        resultado: currentState.resultado,
+        choice: currentState.choice,
+        name: nameDelState,
+        online: currentState.online,
+        start: currentState.start,
+      }),
+    });
   },
 
   updateRoom() {
@@ -181,26 +198,6 @@ const state = {
         }),
       }
     );
-  },
-
-  pushJugada() {
-    const currentState = this.getState();
-    const nameDelState = this.data.name;
-    fetch(API_BASE_URL + "/playing", {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: currentState.userId,
-        idRealTime: currentState.rtdbID,
-        resultado: currentState.resultado,
-        choice: currentState.choice,
-        name: nameDelState,
-        online: currentState.online,
-        start: currentState.start,
-      }),
-    });
   },
 
   traerDataArrays(callback) {

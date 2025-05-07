@@ -68,7 +68,7 @@ export class Login extends HTMLElement {
 
     const miButtonEvent = this.querySelector(".mi-button");
 
-    miButtonEvent.addEventListener("MiButtonClick", (e) => {
+    miButtonEvent?.addEventListener("MiButtonClick", (e) => {
       e.preventDefault();
       const email = formEvent.email.value;
       const name = formEvent.nombre.value;
@@ -80,7 +80,7 @@ export class Login extends HTMLElement {
         state.setEmailAndFullName(email, name);
         state.signIn(() => {
           const currentState = state.getState();
-          if (currentState.messageError === "" || undefined) {
+          if (currentState.userId) {
             Router.go("/opciones");
           } else {
             divErrorLogin.style.display = "flex";

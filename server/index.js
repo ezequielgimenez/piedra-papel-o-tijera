@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const cors = require("cors");
 const uuid_1 = require("uuid");
+const path = require("path");
 //Base datos firestore
 const db_1 = require("./db");
 //
@@ -37,13 +38,14 @@ app.post("/signup", (req, res) => {
             })
                 .then((reference) => {
                 res.json({
-                    //Este enpoint va a retornar el id de referencia que seria el del user para trabajar luego en el state
+                    success: true,
                     id: reference.id,
                 });
             });
         }
         else {
             res.json({
+                success: false,
                 message: "Ya existe un email registrado",
             });
         }
@@ -59,25 +61,23 @@ app.post("/signin", (req, res) => {
         .get()
         .then((resp) => {
         if (resp.empty) {
-            res.status(404).json({
+            res.json({
+                success: false,
                 message: "No se encontro el user",
             });
         }
         else {
             res.json({
-                idDelUser: resp.docs[0].id,
+                success: true,
+                id: resp.docs[0].id,
             });
         }
     });
 });
 // OnlyGenerateSala
-//En este enpoint vamos a generar una sala con un codigo corto para ingresar a la misma (Nuevo juego)
-// vamos a generar un id largo y uno corto, nos retornara el id corto para que los usuarios ingresen a la sala correspondiente
-//con el proximo endpoint que pedira el id corto
-app.post("/generarSala", (req, res) => {
+app.post("/rooms", (req, res) => {
     //Nos pedira el userId que en teoria estara registrado en la base de datos para ingresar a la sala
     const userId = req.body.userId;
-    const roomName = "currentGame";
     userCollection
         .doc(userId)
         .get()
@@ -85,15 +85,13 @@ app.post("/generarSala", (req, res) => {
         if (doc.exists) {
             const userData = doc.data();
             const idLargo = (0, uuid_1.v4)();
-            const salaRef = db_1.rtdb.ref("salas/" + idLargo + "/" + roomName);
+            const salaRef = db_1.rtdb.ref("salas/" + idLargo + "/currentGame");
             salaRef
                 .set({
                 owner: userId,
             })
                 .then(() => {
-                ////creamos una salaCollection en firestore y le seteamos el id largo y el id corto
-                //el id corto lo usaremos para crear un doc con ese id corto, el cual los usuarios se pasaran para ingresar a la sala
-                //el id largo que nos genero uuidv4() lo usamos para comunicarnos con la sala salaRef(idlargo)
+                //creo un doc con un id corto en firestore y guardo ahi el id largo
                 const idCorto = 1000 + Math.floor(Math.random() * 999);
                 salaCollection
                     .doc(idCorto.toString())
@@ -107,39 +105,46 @@ app.post("/generarSala", (req, res) => {
                 })
                     .then(() => {
                     res.json({
-                        idSala: idCorto,
+                        success: true,
+                        id: idCorto,
                         nombreOwner: userData.nombre,
                     });
                 });
             });
         }
+        else {
+            res.json({
+                success: false,
+                message: "User not found",
+            });
+        }
     });
 });
 // getToRoom()
-app.get("/salas/:idSala", (req, res) => {
-    //como este endpoint es un get no le podemos pasar un body, por lo cual el userId lo pasamos como una query para tener la referencia
-    //usuario en el doc, si existe el user vamos a entrar en la colection de las salas con el idSala y retornaremos su data (id largo) junto con
-    // los resultados
+app.get("/rooms/:idRoom", (req, res) => {
     const userId = req.query.userId;
-    const idSala = req.params.idSala;
-    if (userId !== undefined) {
+    const idRoom = req.params.idRoom;
+    if (userId) {
         userCollection
             .doc(userId.toString())
             .get()
             .then((doc) => {
             if (doc.exists) {
                 salaCollection
-                    .doc(idSala)
+                    .doc(idRoom)
                     .get()
                     .then((snap) => {
                     if (snap.exists) {
                         const salaData = snap.data();
-                        const userData = doc.data();
-                        salaData.nombre = userData.nombre;
-                        res.json(salaData);
+                        res.json({
+                            success: true,
+                            id: salaData.rtdbID,
+                            message: "todo ok, sala encontrada",
+                        });
                     }
                     else {
-                        res.status(401).json({
+                        res.json({
+                            success: false,
                             message: "No existe la sala",
                         });
                     }
@@ -159,8 +164,7 @@ app.get("/salas/:idSala", (req, res) => {
 app.post("/playing", (req, res) => {
     const userId = req.body.userId;
     const idRealTime = req.body.idRealTime;
-    const roomName = "currentGame";
-    const salaRef = db_1.rtdb.ref("salas/" + idRealTime + "/" + roomName);
+    const salaRef = db_1.rtdb.ref("salas/" + idRealTime + "/currentGame");
     salaRef.once("value").then((snapshot) => {
         salaRef
             .child(userId)
@@ -188,7 +192,7 @@ app.post("/playing", (req, res) => {
 app.post("/pushResultados/:idSala", (req, res) => {
     const userId = req.query.userId;
     const idSala = req.params.idSala;
-    if (userId !== undefined) {
+    if (userId) {
         userCollection
             .doc(userId.toString())
             .get()
@@ -205,7 +209,7 @@ app.post("/pushResultados/:idSala", (req, res) => {
 });
 //static server
 //
-app.use(express.static("dist"));
+app.use(express.static(path.resolve(__dirname, "../dist")));
 app.get("*", (req, res) => {
-    res.sendFile(__dirname + "/dist/index.html");
+    res.sendFile(path.resolve(__dirname, "../dist/index.html"));
 });
