@@ -139,10 +139,10 @@ const state = {
         if (data.success) {
           if (callback) {
             currenState.rtdbID = data.id;
-            currenState.nombreOwner = data.nombreOwner;
 
             //Mi state toma el valor que le sumamos al player ganador(valor actualizado)
             //o toma el valor inicial  que le dimos en "index playing" si no tiene aun datos y gano por primera vez osea "1"
+            currenState.nombreOwner = data.salaData.nombreOwner;
             currenState.player1 = data.salaData.resultados.player1;
             currenState.player2 = data.salaData.resultados.player2;
             this.setState(currenState);
