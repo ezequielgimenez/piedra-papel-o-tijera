@@ -70,7 +70,7 @@ export class Win extends HTMLElement {
         </style>
         `;
     const eventButton = this.querySelector(".mi-button");
-    eventButton.addEventListener("MiButtonClick", (e) => {
+    eventButton?.addEventListener("MiButtonClick", (e) => {
       e.preventDefault();
       Router.go("/instrucciones");
     });

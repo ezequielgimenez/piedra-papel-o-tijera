@@ -210,7 +210,7 @@ const state = {
 
   traerDataArrays(callback) {
     const currenState = this.getState();
-
+    state.getRoom();
     // Connection with RTDB
     const salaRef = rtdb.ref("salas/" + currenState.rtdbID + "/currentGame");
     salaRef.on("value", (snapshot) => {
