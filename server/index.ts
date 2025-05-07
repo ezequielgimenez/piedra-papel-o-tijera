@@ -175,27 +175,36 @@ app.post("/playing", (req, res) => {
   const userId = req.body.userId;
   const idRealTime = req.body.idRealTime;
   const salaRef = rtdb.ref("salas/" + idRealTime + "/currentGame");
-
-  salaRef.once("value").then((snapshot) => {
-    salaRef
-      .child(userId)
-      .transaction((data) => {
-        if (snapshot.numChildren() >= 3) {
-          // Si hay más de 2 objetos o son 3 entonces..
-          //si "data" tiene datos y es el mismo idUser lo actualiza con el req.body,
-          //de lo contrario si data es falsy simplemente devuelve data (no se hace ninguna modificacion en la base de datos)
-          return data ? { ...data, ...req.body } : data;
-        } else {
-          //[siempre y cuando sean menos de 3 objetos]
-          //si data es verdadero (osea que ya existe ese UserId con datos), retorna data actualizandolo
-          //data es falso (no existe ese userId en la referencia con datos), retorna el nuevo objeto agregandolo
-          return data || req.body;
-        }
-      })
-      .then(() => {
-        res.json("ok");
-      });
-  });
+  if (userId) {
+    salaRef.once("value").then((snapshot) => {
+      salaRef
+        .child(userId)
+        .transaction((data) => {
+          if (snapshot.numChildren() >= 3) {
+            // Si hay más de 2 objetos o son 3 entonces..
+            //si "data" tiene datos y es el mismo idUser lo actualiza con el req.body,
+            //de lo contrario si data es falsy simplemente devuelve data (no se hace ninguna modificacion en la base de datos)
+            return data ? { ...data, ...req.body } : data;
+          } else {
+            //[siempre y cuando sean menos de 3 objetos]
+            //si data es verdadero (osea que ya existe ese UserId con datos), retorna data actualizandolo
+            //data es falso (no existe ese userId en la referencia con datos), retorna el nuevo objeto agregandolo
+            return data || req.body;
+          }
+        })
+        .then(() => {
+          res.json({
+            success: true,
+            message: "Operacion realizada",
+          });
+        });
+    });
+  } else {
+    res.json({
+      success: false,
+      message: "No hay userId",
+    });
+  }
 });
 
 // En este endpoint vamos a actualizar la data de firestore con la data que le pasamos por el front,

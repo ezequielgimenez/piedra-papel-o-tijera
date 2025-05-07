@@ -172,7 +172,11 @@ const state = {
         online: currentState.online,
         start: currentState.start,
       }),
-    });
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        return data.success;
+      });
   },
 
   updateRoom() {
