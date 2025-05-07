@@ -114,14 +114,9 @@ app.post("/rooms", (req, res) => {
                 },
               })
               .then(() => {
-                return salaDoc.get();
-              })
-              .then((doc) => {
-                const salaData = doc.data();
                 res.json({
                   success: true,
                   id: idCorto,
-                  salaData,
                 });
               });
           });
@@ -154,6 +149,7 @@ app.get("/rooms/:idRoom", (req, res) => {
                 res.json({
                   success: true,
                   id: salaData.rtdbID,
+                  salaData,
                   message: "todo ok, sala encontrada",
                 });
               } else {
