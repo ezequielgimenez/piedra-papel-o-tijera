@@ -13,7 +13,6 @@ export class Instrucciones extends HTMLElement {
       const data = currentState.rtdbData;
 
       const datacompleta = map(data);
-      console.log("Data es:", datacompleta[0]);
       if (currentState.nombreOwner !== datacompleta[1].name) {
         currentState.nombre2 = datacompleta[1].name;
         currentState.nombre2 =
@@ -30,9 +29,12 @@ export class Instrucciones extends HTMLElement {
 
     this.innerHTML = `
         <div class="contenedor-datos">
-            <div class="dato">Nombre 1:${currentState.name}</div>
+            <div class="dato">Nombre 1:${currentState.nombreOwner}</div>
             <div class="dato">Sala:${currentState.idSala}</div>
-            <div class="dato">Nombre 2:${currentState.name}
+            <div class="dato">Nombre 2:${
+              currentState.nombre2 !== currentState.nombreOwner
+                ? currentState.nombre2
+                : ""
             }</div>
         </div>
         <el-texto tipoTexto="body">

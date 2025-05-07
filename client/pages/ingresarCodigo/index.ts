@@ -53,7 +53,7 @@ export class Codigo extends HTMLElement {
 
       state.getRoom(() => {
         const currentState = state.getState();
-        if (currentState.messageError === "" || undefined) {
+        if (currentState.rtdbID) {
           state.pushJugada(); //Pushea en la base de datos, la data del jugador name,user y lo dirige a la sala de espera (instrucciones)
           Router.go("/instrucciones");
         } else {
