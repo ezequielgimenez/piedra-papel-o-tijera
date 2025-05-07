@@ -173,9 +173,13 @@ const state = {
         start: currentState.start,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        return res.json();
+      })
       .then((data) => {
-        return data.success;
+        if (data.success) {
+          console.log("todo ok");
+        }
       });
   },
 

@@ -172,8 +172,8 @@ app.get("/rooms/:idRoom", (req, res) => {
 //name, start, choice del jugador etc
 
 app.post("/playing", (req, res) => {
-  const userId = req.body.userId;
-  const idRealTime = req.body.idRealTime;
+  const { userId, idRealTime, resultado, choice, name, online, start } =
+    req.body;
   const salaRef = rtdb.ref("salas/" + idRealTime + "/currentGame");
   if (userId) {
     salaRef.once("value").then((snapshot) => {
