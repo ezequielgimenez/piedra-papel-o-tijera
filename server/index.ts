@@ -195,7 +195,7 @@ app.post("/playing", (req, res) => {
         .then(() => {
           res.json({
             success: true,
-            message: "Operacion realizada con exito",
+            message: "Operación realizada con exito",
           });
         })
         .catch((error) => {
